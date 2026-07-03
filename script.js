@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, { threshold: 0.15 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    // --- 2. FORM WHATSAPP (Metodo link wa.me sicuro) ---
+    // --- 2. FORM WHATSAPP (Metodo wa.me) ---
     const waForm = document.getElementById('wa-form');
     if (waForm) {
         waForm.addEventListener('submit', (e) => {
@@ -38,19 +38,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // --- 3. CARICAMENTO GALLERIE (Unica chiamata JSON) ---
+    // --- 3. CARICAMENTO GALLERIE E SLIDER UNIFICATO ---
     try {
         const response = await fetch('img/gallery-data.json');
         const data = await response.json();
 
-        // Popolamento selettivo
+        // Popolamento pagine specifiche
         popolaGalleria('grid-matrimoni', 'img/matrimoni', data.matrimoniTotImg, "Foto matrimonio");
         popolaGalleria('grid-eventi', 'img/eventi', data.eventiTotImg, "Foto evento");
         popolaGalleria('grid-singoli', 'img/singoli', data.singoliTotImg, "Foto singolo");
 
-        // Slider
+        // Slider Unificato
         const track = document.querySelector('.slider-track');
-        if (track && data.totalImages) inizializzaSlider(data.totalImages, track);
+        if (track) {
+            inizializzaSliderUnificato(data, track);
+        }
 
     } catch (err) {
         console.error("Errore caricamento galleria:", err);
@@ -74,18 +76,32 @@ function popolaGalleria(id, path, totale, alt) {
     container.appendChild(fragment);
 }
 
-function inizializzaSlider(totalImages, track) {
+function inizializzaSliderUnificato(data, track) {
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
     let currentIndex = 0;
 
-    for (let i = 1; i <= totalImages; i++) {
-        const img = document.createElement('img');
-        img.src = `img/galleria/fioraio-${i}.jpg`;
-        img.alt = `Creazione ${i}`;
-        img.loading = 'lazy';
-        track.appendChild(img);
-    }
+    // Array con le configurazioni delle fonti per lo slider
+    const fonti = [
+        { path: 'img/matrimoni', totale: data.matrimoniTotImg },
+        { path: 'img/eventi', totale: data.eventiTotImg },
+        { path: 'img/singoli', totale: data.singoliTotImg }
+    ];
+
+    // Inserisce le immagini nello slider
+    fonti.forEach(fonte => {
+        if (fonte.totale) {
+            for (let i = 1; i <= fonte.totale; i++) {
+                const img = document.createElement('img');
+                img.src = `${fonte.path}/${i}.jpg`;
+                img.alt = `Creazione ${fonte.path}`;
+                img.loading = 'lazy';
+                track.appendChild(img);
+            }
+        }
+    });
+
+    const totalImages = track.querySelectorAll('img').length;
 
     const update = () => {
         const imgWidth = track.querySelector('img')?.getBoundingClientRect().width || 0;

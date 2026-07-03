@@ -3,7 +3,7 @@
 }
 
 ::view-transition-old(root) {
-    animation: fade-out .24s ease;
+    animation: fade-out .25s ease;
 }
 
 ::view-transition-new(root) {

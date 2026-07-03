@@ -10,24 +10,33 @@
     animation: fade-in .25s ease;
 }
 
-/* --- FIX MOBILE: Animazione pulita senza trasformazioni --- */
 .immagine-fluida {
-    animation: fadeInOnly 0.8s ease-in-out;
+    animation: fadeInImage 0.8s ease-in-out;
 }
 
-@keyframes fadeInOnly {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes fadeInImage {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes fade-out {
-    from { opacity: 1; }
-    to { opacity: 0; }
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 :root {
@@ -115,9 +124,11 @@ nav a::before {
 }
 
 nav a.this_gallery {
-    color: white;
+    content: "";
+    inset: 0;
     background: var(--primary);
     border-radius: 50px;
+    color: white;
 }
 
 nav a:hover {
@@ -132,6 +143,8 @@ nav a:hover::before {
 .map-section iframe {
     display: block;
 }
+
+/* Previene spazi bianchi */
 
 .hero {
     height: 75vh;
@@ -229,6 +242,7 @@ nav a:hover::before {
     font-size: 1.4rem;
 }
 
+/* ARCHITETTURA CSS DELLO SLIDER */
 .gallery {
     padding: 80px 10%;
     background: #fff;
@@ -263,6 +277,7 @@ nav a:hover::before {
 
 .slider-track img {
     width: calc((100% - 60px) / 4);
+    /* Desktop: 4 foto */
     flex-shrink: 0;
     height: 300px;
     object-fit: cover;
@@ -298,8 +313,13 @@ nav a:hover::before {
     transform: scale(1.1);
 }
 
-.prev-btn { left: -60px; }
-.next-btn { right: -60px; }
+.prev-btn {
+    left: -60px;
+}
+
+.next-btn {
+    right: -60px;
+}
 
 .contact-section {
     padding: 80px 10%;
@@ -374,6 +394,7 @@ nav a:hover::before {
     box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
 }
 
+/* --- NUOVA SEZIONE ORARI --- */
 .orari-section {
     padding: 80px 10%;
     text-align: center;
@@ -391,15 +412,20 @@ nav a:hover::before {
     color: #555;
 }
 
-.orari-table {
-    width: 100%;
+.table-container {
     max-width: 600px;
     margin: 0 auto;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    /* Per stondare gli angoli della tabella */
+}
+
+.orari-table {
+    width: 100%;
     border-collapse: collapse;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    border-radius: 15px;
-    overflow: hidden;
 }
 
 .orari-table th {
@@ -416,11 +442,44 @@ nav a:hover::before {
     font-weight: 500;
 }
 
+.orari-table tr:last-child td {
+    border-bottom: none;
+}
+
+.orari-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.orari-table .closed-day td {
+    color: var(--primary);
+    /* Colore rosso per il giorno di chiusura */
+    font-weight: bold;
+}
+
+/* FOOTER E SOCIAL LINKS */
 footer {
     background: var(--text-dark);
     color: #fff;
     text-align: center;
     padding: 50px 20px;
+}
+
+footer h3 {
+    margin-bottom: 15px;
+    color: var(--secondary);
+    font-size: 1.5rem;
+}
+
+footer p,
+footer a {
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+footer a:hover {
+    color: var(--secondary);
+    text-decoration: underline;
 }
 
 .social-links {
@@ -430,6 +489,31 @@ footer {
     gap: 25px;
 }
 
+.social-links a {
+    color: #ccc;
+    transition: color 0.3s ease;
+    display: inline-flex;
+}
+
+.social-links a:hover {
+    color: var(--secondary);
+}
+
+.social-links svg {
+    transition: transform 0.3s ease;
+}
+
+.social-links a:hover svg {
+    transform: translateY(-4px);
+}
+
+.copyright {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* TASTO FLUTTUANTE WHATSAPP IN BASSO A SINISTRA */
 .wa-floating {
     position: fixed;
     bottom: 20px;
@@ -444,6 +528,12 @@ footer {
     justify-content: center;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     z-index: 1000;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.wa-floating:hover {
+    transform: scale(1.1);
+    background: var(--whatsapp-hover);
 }
 
 .fade-in {
@@ -457,12 +547,164 @@ footer {
     transform: translateY(0);
 }
 
-/* --- GRIGLIA FOTOGRAFICA CORRETTA E RESPONSIVA --- */
+/* --- AGGIUNTE PER ACCESSIBILITÀ --- */
+*:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary);
+    color: white;
+    padding: 8px 15px;
+    z-index: 9999;
+    transition: top 0.3s;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* --- MENU HAMBURGER --- */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    z-index: 1001;
+}
+
+
+
+/* MEDIA QUERIES RESPONSIVE */
+@media (max-width: 1024px) {
+    .slider-track img {
+        width: calc((100% - 20px) / 2);
+        /* Tablet: 2 Foto visibili */
+    }
+
+    .prev-btn {
+        left: -60px;
+    }
+
+    .next-btn {
+        right: -60px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav a {
+        margin: 0 10px;
+    }
+
+    .hero-content h2 {
+        font-size: 2.8rem;
+    }
+
+    .contact-form {
+        padding: 25px;
+    }
+
+    .orari-table th,
+    .orari-table td {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .contact-forms {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-box {
+        width: 100%;
+        max-width: 650px;
+    }
+
+    .hamburger {
+        display: block;
+        position: absolute;
+        top: 25px;
+        right: 5%;
+    }
+
+    #main-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    #main-nav.active {
+        max-height: 400px;
+        padding: 20px 0;
+    }
+
+    #main-nav a {
+        margin: 10px 20px;
+        display: block;
+        width: calc(100% - 40px);
+    }
+}
+
+@media (max-width: 600px) {
+    .slider-track img {
+        width: 100%;
+        /* Mobile: 1 sola foto a schermo intero */
+    }
+
+    .slider-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+
+    .prev-btn {
+        left: -10px;
+    }
+
+    .next-btn {
+        right: -10px;
+    }
+
+    /* Riduce la grandezza del tasto WhatsApp su mobile */
+    .wa-floating {
+        width: 50px;
+        height: 50px;
+        bottom: 15px;
+        left: 15px;
+    }
+
+    .wa-floating svg {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* --- GRIGLIA FOTOGRAFICA (Senza Slider) --- */
 .galleria {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 40px 30px;
-    text-align: center;
+    padding: 0 30px;
 }
 
 .photo-grid {
@@ -470,40 +712,40 @@ footer {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .photo-grid img {
     width: 100%;
-    display: block; /* Fix per Safari */
     aspect-ratio: 4/5;
     object-fit: cover;
     border-radius: 12px;
-    background: #f0f0f0; /* Caricamento visibile */
-    min-height: 250px; /* Fix per altezza zero */
-    transition: transform 0.3s ease;
 }
 
 .photo-grid img:hover {
-    transform: scale(1.02);
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
 }
 
-/* --- RESPONSIVE MEDIA QUERIES --- */
-@media (max-width: 1024px) {
-    .slider-track img { width: calc((100% - 20px) / 2); }
+.galleria h2 {
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    margin-top: 40px;
 }
 
-@media (max-width: 768px) {
-    header { flex-direction: column; gap: 15px; }
-    .hamburger { display: block; position: absolute; top: 25px; right: 5%; }
-    #main-nav { 
-        position: absolute; top: 100%; left: 0; width: 100%; background: #fff;
-        max-height: 0; overflow: hidden; transition: max-height 0.4s;
-    }
-    #main-nav.active { max-height: 400px; padding: 20px 0; }
-    .photo-grid { grid-template-columns: 1fr; } /* Foto a colonna singola su mobile */
+.galleria {
+    text-align: center;
 }
 
-@media (max-width: 600px) {
-    .slider-track img { width: 100%; }
-    .wa-floating { width: 50px; height: 50px; bottom: 15px; left: 15px; }
+.galleria p {
+    color: #555;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+a .this_gallery {
+    color: var(--primary);
+    font-weight: bold;
+    text-decoration: underline;
 }

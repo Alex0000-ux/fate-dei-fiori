@@ -1,6 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /private/
-
-Sitemap: https://www.tuodominio.it/sitemap.xml
+Sitemap: https://www.fatadeifiorirg.it/sitemap.xml

@@ -119,7 +119,7 @@ nav a::before {
     border-radius: inherit;
     opacity: 0;
     transform: scale(.85);
-    transition: opacity .35s ease, transform .35s ease;
+    transition: opacity .34s ease, transform .35s ease;
     z-index: -1;
 }
 

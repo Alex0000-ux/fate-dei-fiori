@@ -143,46 +143,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSlider();
     }
 
-    // ==========================================
-    // 4. MOTORE UNIFICATO GALLERIE A GRIGLIA
-    // ==========================================
-    async function caricaGriglia(idContenitore, jsonKey, cartella) {
-        const contenitore = document.getElementById(idContenitore);
-        // Se il contenitore non c'è sulla pagina o è già stato caricato, interrompe
-        if (!contenitore || contenitore.dataset.loaded === "true") return;
-
-        const data = await getGalleryData();
-        if (!data) return;
-
-        const totaleFoto = data[jsonKey];
-        if (!totaleFoto) return;
-
-        const fragment = document.createDocumentFragment();
-        
-        for (let i = totaleFoto; i >= 1; i--) {
-            const img = document.createElement('img');
-            img.src = `img/${cartella}/${i}.jpg`;
-            img.alt = `Foto ${cartella} ${i}`;
-            img.loading = 'lazy';
-            img.classList.add('immagine-fluida'); // Aggiunto per CSS
-            fragment.appendChild(img);
-        }
-
-        contenitore.innerHTML = "";
-        contenitore.appendChild(fragment);
-        contenitore.dataset.loaded = "true";
-    }
-
-    // Caricamento immediato per le sezioni presenti in pagina
-    caricaGriglia('grid-matrimoni', 'matrimoniTotImg', 'matrimoni');
-    caricaGriglia('grid-eventi', 'eventiTotImg', 'eventi');
-    caricaGriglia('grid-singoli', 'singoliTotImg', 'singoli');
-
-    // Mantiene l'event listener specifico richiesto per il link "Singoli"
-    const linkSingoli = document.querySelector('a[href="singoli.html"]');
-    if (linkSingoli) {
-        linkSingoli.addEventListener('click', () => {
-            setTimeout(() => caricaGriglia('grid-singoli', 'singoliTotImg', 'singoli'), 100);
-        });
-    }
 });

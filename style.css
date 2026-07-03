@@ -749,3 +749,30 @@ a .this_gallery {
     font-weight: bold;
     text-decoration: underline;
 }
+
+/* Adatta l'header per schermi intermedi (es. portatili) per evitare overflow */
+@media (max-width: 1200px) and (min-width: 769px) {
+    header {
+        padding: 15px 3%; /* Riduciamo il padding laterale dall'8% al 3% */
+    }
+
+    header h1 {
+        font-size: 1.4rem; /* Rimpiccioliamo leggermente il titolo */
+    }
+
+    nav a {
+        margin-left: 8px; /* Avviciniamo i link del menu */
+        padding: 6px 10px;
+    }
+
+    .logo-container {
+        gap: 10px;
+        margin-left: 0; /* Rimuoviamo il margine negativo che ruba spazio */
+    }
+}
+
+/* Sicurezza globale: impedisce in ogni caso lo scroll orizzontale */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}

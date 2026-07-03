@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nav.classList.toggle('active');
         });
 
+        // Chiude il menu quando si clicca su un link (utile su mobile)
         nav.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.setAttribute('aria-expanded', 'false');
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Gestione delle animazioni allo scroll
     // ==========================================
     const elements = document.querySelectorAll('.fade-in');
+    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -34,12 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }, {
         threshold: 0.15 
     });
+
     elements.forEach(el => observer.observe(el));
 
     // ==========================================
     // 2. Motore Form Contatti -> WhatsApp API
     // ==========================================
     const waForm = document.getElementById('wa-form');
+    
     if (waForm) {
         waForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -58,9 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // SISTEMA CENTRALIZZATO DATI GALLERIA (OTTIMIZZAZIONE MOBILE)
+    // SISTEMA CENTRALIZZATO DATI GALLERIA
     // ==========================================
-    let cachedGalleryData = null; // Cache per non scaricare il JSON più volte
+    let cachedGalleryData = null; 
     
     async function getGalleryData() {
         if (cachedGalleryData) return cachedGalleryData;
@@ -103,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.loading = 'lazy'; 
             fragment.appendChild(img);
         }
-        track.appendChild(fragment); // Iniezione singola per non far scattare la pagina
+        track.appendChild(fragment); 
 
         const imgs = document.querySelectorAll('.slider-track img');
         let currentIndex = 0;
@@ -148,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     async function caricaGriglia(idContenitore, jsonKey, cartella) {
         const contenitore = document.getElementById(idContenitore);
-        // Se il contenitore non c'è sulla pagina o è già stato caricato, interrompe
+        // Interrompe se il contenitore non esiste o è già stato caricato
         if (!contenitore || contenitore.dataset.loaded === "true") return;
 
         const data = await getGalleryData();
@@ -164,25 +168,41 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = `img/${cartella}/${i}.jpg`;
             img.alt = `Foto ${cartella} ${i}`;
             img.loading = 'lazy';
-            img.classList.add('immagine-fluida'); // Aggiunto per CSS
+            img.classList.add('immagine-fluida'); 
             fragment.appendChild(img);
         }
 
         contenitore.innerHTML = "";
         contenitore.appendChild(fragment);
+        
+        // Segna il contenitore come completato per evitare ricaricamenti doppi
         contenitore.dataset.loaded = "true";
     }
 
-    // Caricamento immediato per le sezioni presenti in pagina
-    caricaGriglia('grid-matrimoni', 'matrimoniTotImg', 'matrimoni');
-    caricaGriglia('grid-eventi', 'eventiTotImg', 'eventi');
-    caricaGriglia('grid-singoli', 'singoliTotImg', 'singoli');
-
-    // Mantiene l'event listener specifico richiesto per il link "Singoli"
-    const linkSingoli = document.querySelector('a[href="singoli.html"]');
-    if (linkSingoli) {
-        linkSingoli.addEventListener('click', () => {
-            setTimeout(() => caricaGriglia('grid-singoli', 'singoliTotImg', 'singoli'), 100);
-        });
+    function avviaTutteLeGallerie() {
+        caricaGriglia('grid-matrimoni', 'matrimoniTotImg', 'matrimoni');
+        caricaGriglia('grid-eventi', 'eventiTotImg', 'eventi');
+        caricaGriglia('grid-singoli', 'singoliTotImg', 'singoli');
     }
+
+    // --- I 3 INNESCHI ANTI-BLOCCO ---
+
+    // 1. Innesco standard all'apertura della pagina
+    avviaTutteLeGallerie();
+
+    // 2. Innesco per il BFCache (risveglio dello schermo o uso delle frecce avanti/indietro)
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+            avviaTutteLeGallerie();
+        }
+    });
+
+    // 3. Innesco per click sui link (utile per navigazioni interne rapide)
+    const tuttiILink = document.querySelectorAll('a');
+    tuttiILink.forEach(link => {
+        link.addEventListener('click', () => {
+            setTimeout(avviaTutteLeGallerie, 150);
+        });
+    });
+
 });

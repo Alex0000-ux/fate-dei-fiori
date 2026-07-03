@@ -1,0 +1,40 @@
+name: Aggiorna Gallerie HTML
+
+# Quando deve partire il robot? Ogni volta che carichi qualcosa sul ramo principale
+on:
+  push:
+    branches:
+      - main
+      - master
+
+# Diamo i permessi al robot per modificare e salvare i file HTML
+permissions:
+  contents: write
+
+jobs:
+  aggiorna-codice:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Il robot scarica i tuoi file
+      - name: Checkout del codice
+        uses: actions/checkout@v4
+
+      # 2. Il robot prepara Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 3. Il robot avvia il tuo script
+      - name: Esegui lo script Python
+        run: python genera_gallerie.py
+
+      # 4. Il robot salva i nuovi HTML modificati e li pubblica
+      - name: Salva le modifiche su GitHub
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add *.html
+          git commit -m "Aggiornamento automatico gallerie HTML 🤖" || echo "Nessuna nuova foto, nessun aggiornamento necessario"
+          git push

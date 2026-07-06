@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const testoWhatsApp = `Ciao Fata dei Fiori! 🌸\n\nMi chiamo *${nome}*.\nVi contatto per: *${servizio}*.\n\nEcco i dettagli della mia richiesta:\n"${messaggio}"\n\nAttendo un vostro riscontro, grazie!`;
             const urlCodificato = encodeURIComponent(testoWhatsApp);
-            const numeroTelefono = "393913873184"; 
+            const numeroTelefono = "393296912460"; 
             
             const linkApi = `https://wa.me/${numeroTelefono}?text=${urlCodificato}`;
             window.open(linkApi, '_blank');
